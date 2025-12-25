@@ -3,7 +3,7 @@ import { prisma } from "db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 const userRouter = Router();
-const JWT_SECRET="jwt"
+const JWT_SECERT = "abcd";
 userRouter.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -35,47 +35,51 @@ userRouter.post("/signup", async (req, res) => {
     console.log(e);
     res.status(403).json({
       message: "Error while signing up",
-      
     });
   }
 });
 
-userRouter.get("/signin",async (req,res)=>{
-    try{const {email,password}=req.body;
-    if(!email&&!password){
-        return res.status(403).json({
-            message:"password and email is required"
-        })
+userRouter.get("/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email && !password) {
+      return res.status(403).json({
+        message: "password and email is required",
+      });
     }
-    const dbUser=await prisma.user.findUnique({where:{email}});
-    if(!dbUser){
-        return res.status(403).json({
-            message:"User is doesnot exits"
-        })
+    const dbUser = await prisma.user.findUnique({ where: { email } });
+    if (!dbUser) {
+      return res.status(403).json({
+        message: "User is doesnot exits",
+      });
     }
 
-    const isVerify=await bcrypt.compare(password,dbUser.passwordHash!)
-    if(!isVerify){
-        return res.status(403).send({
-            message:"PassWord is Incorrect"
-        })
+    const isVerify = await bcrypt.compare(password, dbUser.passwordHash!);
+    if (!isVerify) {
+      return res.status(403).send({
+        message: "PassWord is Incorrect",
+      });
     }
-  const token = jwt.sign({
-    id: dbUser.id,
-    password:dbUser.passwordHash
-  }, JWT_SECRET, {
-    expiresIn: '1h'
-  });
+    const token = jwt.sign(
+      {
+        id: dbUser.id,
+        email: dbUser.email,
+      },
+      JWT_SECERT,
+      {
+        expiresIn: "1h",
+      }
+    );
 
-  res.status(200).json({
-    message: "Sign in successful",
-    token: token
-  });}catch(e){
+    res.status(200).json({
+      message: "Sign in successful",
+      token: token,
+    });
+  } catch (e) {
     return res.status(403).json({
-        message:"Internal server issue "
-    })
-
-    }
+      message: "Internal server issue ",
+    });
+  }
 });
 
 export default userRouter;

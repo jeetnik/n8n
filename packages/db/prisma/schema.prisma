@@ -14,80 +14,82 @@ datasource db {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  email              String              @unique
+  id                 String     @id @default(cuid())
+  email              String     @unique
   name               String?
   passwordHash       String?
   lastLoggedId       DateTime?
   refreshToken       String? // Hashed refresh token
   refreshTokenExpiry DateTime?
-  createdAt          DateTime?           @default(now())
-  updatedAt          DateTime?           @updatedAt
+  createdAt          DateTime?  @default(now())
+  updatedAt          DateTime?  @updatedAt
   workflows          Workflow[]
 }
 
 model Workflow {
- id                String @id @default(cuid())
- name              String 
- createdAt         DateTime @default(now())
- updatedAt         DateTime @updatedAt  
- userId            String
- user              User @relation(fields: [userId],references: [id],onDelete: Cascade)
- nodes             WorkflowNode[]
- edges             WorkflowEdge[]
- executions        WorkflowExecution[]
+  id         String              @id @default(cuid())
+  name       String
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  userId     String
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nodes      WorkflowNode[]
+  edges      WorkflowEdge[]
+  executions WorkflowExecution[]
 }
-model WorkflowNode{
-  id String @id @default(cuid())
-  worflowId String
-  workflow  Workflow @relation(fields: [worflowId],references: [id],onDelete: Cascade)
-  type  String
-  name  String
-  postion Json
-  data Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+model WorkflowNode {
+  id          String         @id @default(cuid())
+  workflowId  String
+  workflow    Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  type        String
+  name        String
+  position    Json
+  data        Json
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   sourceEdges WorkflowEdge[] @relation("SourceNode")
-  targetEdges WorkflowEdge[]  @relation("TargetNode")
+  targetEdges WorkflowEdge[] @relation("TargetNode")
 }
 
-model WorkflowEdge{
-  id String @id @default(cuid())
+model WorkflowEdge {
+  id         String       @id @default(cuid())
   workflowId String
-  worflow Workflow @relation(fields: [workflowId],references: [id],onDelete: Cascade)
-  sourceId String
-  source WorkflowNode @relation("SourceNode",fields: [sourceId], references: [id],onDelete: Cascade)
-  targetId String
-  target WorkflowNode @relation("TargetNode",fields: [targetId],references: [id],onDelete: Cascade)
-  createsAt  DateTime @default(now())
+  workflow   Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  sourceId   String
+  source     WorkflowNode @relation("SourceNode", fields: [sourceId], references: [id], onDelete: Cascade)
+  targetId   String
+  target     WorkflowNode @relation("TargetNode", fields: [targetId], references: [id], onDelete: Cascade)
+  createdAt  DateTime     @default(now())
+}
 
+model WorkflowExecution {
+  id             String          @id @default(cuid())
+  workflowId     String
+  workflow       Workflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status         ExecutionStatus @default(RUNNING)
+  startedAt      DateTime        @default(now())
+  finishedAt     DateTime?
+  error          String?
+  nodeExecutions NodeExecution[]
 }
-model WorkflowExecution{
-id String @id @default(cuid())
-worklowId String
-workflow Workflow @relation(fields: [worklowId],references: [id],onDelete: Cascade)
-status   ExecutionStatus     @default(RUNNING)
-startedAt DateTime @default(now())
-finishedAt DateTime?
-error String?
-nodeExecutions NodeExecution[]
-}
+
 model NodeExecution {
-    id                  String            @id @default(cuid())
-    workflowExecutionId String
-    workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references:[id], onDelete: Cascade)
-    nodeId              String
-    status              ExecutionStatus   @default(PENDING)
-    startedAt           DateTime?
-    finishedAt          DateTime?
-    output              Json?
-    error               String?
-  }
+  id                  String            @id @default(cuid())
+  workflowExecutionId String
+  workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+  nodeId              String
+  status              ExecutionStatus   @default(PENDING)
+  startedAt           DateTime?
+  finishedAt          DateTime?
+  output              Json?
+  error               String?
+}
 
-  enum ExecutionStatus {
-    PENDING
-    RUNNING
-    SUCCESS
-    FAILED
-    CANCELLED
-  }
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+  CANCELLED
+}

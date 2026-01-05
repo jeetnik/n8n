@@ -13,83 +13,65 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Application {
+  Telegram
+  whatsapp
+  OpenAi
+  gmail
+  resend
+}
+
 model User {
-  id                 String     @id @default(cuid())
-  email              String     @unique
-  name               String?
+  id                 String            @id @default(cuid())
+  email              String            @unique
   passwordHash       String?
   lastLoggedId       DateTime?
   refreshToken       String? // Hashed refresh token
   refreshTokenExpiry DateTime?
-  createdAt          DateTime?  @default(now())
-  updatedAt          DateTime?  @updatedAt
-  workflows          Workflow[]
+  createdAt          DateTime?         @default(now())
+  updatedAt          DateTime?         @updatedAt
+  workflow           Workflow[]
+  userCredentials    UserCredentials[]
 }
 
 model Workflow {
-  id         String              @id @default(cuid())
-  name       String
-  createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
-  userId     String
-  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  nodes      WorkflowNode[]
-  edges      WorkflowEdge[]
-  executions WorkflowExecution[]
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  active    Boolean
+  tags      String[] @default([])
+  nodes     Json[]
+  edges     Json[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model WorkflowNode {
-  id          String         @id @default(cuid())
-  workflowId  String
-  workflow    Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  type        String
+model UserCredentials {
+  id          String   @id @default(cuid())
   name        String
-  position    Json
+  type        String?
+  apiName     String?
+  application String?
+  appIcon     String?
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
   data        Json
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  sourceEdges WorkflowEdge[] @relation("SourceNode")
-  targetEdges WorkflowEdge[] @relation("TargetNode")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model WorkflowEdge {
-  id         String       @id @default(cuid())
-  workflowId String
-  workflow   Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  sourceId   String
-  source     WorkflowNode @relation("SourceNode", fields: [sourceId], references: [id], onDelete: Cascade)
-  targetId   String
-  target     WorkflowNode @relation("TargetNode", fields: [targetId], references: [id], onDelete: Cascade)
-  createdAt  DateTime     @default(now())
+model AvailabeTriggers {
+  id          String   @unique @default(uuid())
+  name        String
+  type        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }
 
-model WorkflowExecution {
-  id             String          @id @default(cuid())
-  workflowId     String
-  workflow       Workflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  status         ExecutionStatus @default(RUNNING)
-  startedAt      DateTime        @default(now())
-  finishedAt     DateTime?
-  error          String?
-  nodeExecutions NodeExecution[]
-}
-
-model NodeExecution {
-  id                  String            @id @default(cuid())
-  workflowExecutionId String
-  workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
-  nodeId              String
-  status              ExecutionStatus   @default(PENDING)
-  startedAt           DateTime?
-  finishedAt          DateTime?
-  output              Json?
-  error               String?
-}
-
-enum ExecutionStatus {
-  PENDING
-  RUNNING
-  SUCCESS
-  FAILED
-  CANCELLED
+model Project {
+  id String @unique @default(uuid())
 }

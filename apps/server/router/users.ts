@@ -1,85 +1,84 @@
-import { Router } from "express";
 import { prisma } from "db";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { Router } from "express";
+import type { Request, Response } from "express";
+import { createHash, generateToken } from "../utils/helper";
+import ms, { type StringValue } from "ms";
+
 const userRouter = Router();
-const JWT_SECERT = "abcd";
-userRouter.post("/signup", async (req, res) => {
-  try {
+const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY || 15;
+const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY || "7d";
+userRouter.post("/signin", async (req: Request, res: Response) => {
+  try{
     const { email, password } = req.body;
-    if (!email && !password) {
-      return res.status(403).json({
+    if (!email || !password) {
+      return res.status(400).json({
         message: "Email and password are required",
       });
     }
-    const ifExits = await prisma.user.findUnique({
-      where: { email },
-    });
-    if (ifExits) {
-      return res.status(403).json({
-        messgae: "User already exits",
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid email or password",
       });
     }
-    const hashpassword = await bcrypt.hash(password, 12);
-    const user = await prisma.user.create({
-      data: {
-        email: email,
-        passwordHash: hashpassword,
-      },
+    const ispasswordVaild = password === user.passwordHash;
+    if (!ispasswordVaild) {
+      return res.status(400).json({
+        message: "Invalid email or password",
+      });
+    }
+    const token = generateToken(user);
+    const refreshtoken = createHash(token!);
+    // const accesstoken=createHash(token!);
+    const expiresAt = new Date(
+      Date.now() + ms(ACCESS_TOKEN_EXPIRY as StringValue)
+    );
+    const updateUser = await prisma.user.update({
+      where: { email },
+      data: { refreshToken: refreshtoken, refreshTokenExpiry: expiresAt },
     });
-    res.status(200).json({
-      messgae: "user is created",
-      userId: user.id,
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(403).json({
-      message: "Error while signing up",
-    });
-  }
+
+    res.status(200).json({ message: "login successful", userdata: updateUser });}catch(error){
+      return res.status(500).json({
+        messgae:"Internal server error"
+      })
+
+    }
+  
 });
 
-userRouter.get("/signin", async (req, res) => {
+userRouter.post("/signup", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    if (!email && !password) {
-      return res.status(403).json({
-        message: "password and email is required",
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and Password is required",
       });
     }
-    const dbUser = await prisma.user.findUnique({ where: { email } });
-    if (!dbUser) {
-      return res.status(403).json({
-        message: "User is doesnot exits",
-      });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (user) {
+      return res.status(400).json({ message: "User already exists" });
     }
-
-    const isVerify = await bcrypt.compare(password, dbUser.passwordHash!);
-    if (!isVerify) {
-      return res.status(403).send({
-        message: "PassWord is Incorrect",
-      });
-    }
-    const token = jwt.sign(
-      {
-        id: dbUser.id,
-        email: dbUser.email,
+    const newUser = await prisma.user.create({
+      data: {
+        email: email,
+        passwordHash: password,
+        lastLoggedId: new Date(),
       },
-      JWT_SECERT,
-      {
-        expiresIn: "1h",
-      }
-    );
+    });
 
     res.status(200).json({
-      message: "Sign in successful",
-      token: token,
+      message: "user created successful",
+      userId: newUser.id,
     });
-  } catch (e) {
-    return res.status(403).json({
-      message: "Internal server issue ",
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
     });
   }
 });
+
 
 export default userRouter;

@@ -1,37 +1,39 @@
 import { Router } from "express";
-import auth from "../middelware/auth";
+import type { Request, Response } from "express";
+import { WorkflowSchema } from "../utils/types";
 import { prisma } from "db";
+const workflowRouter = Router();
 
-export const workflowRouter=Router();
-
-workflowRouter.post("/create",auth,async (req,res)=>{
-    try{
-
-    const {id} =req.user!;
-    const {name}=req.body;
-
-    if(!name || typeof name !== "string"){
-        return res.status(400).json({
-           message:"name of workflow is required" 
-        })
+workflowRouter.post("/save", async (req: Request, res: Response) => {
+  try {
+    const payload = req.body;
+    const parsed = WorkflowSchema.parse(payload);
+    const savedWorkflow = await prisma.workflow.create({
+      data: {
+        name: parsed.name,
+        active: parsed.active,
+        nodes: parsed.nodes as any,
+        edges: parsed.edges as any,
+        userId: req.user?.id,
+        tags: [],
+      },
+    });
+    const saveddata={
+        workflowId: savedWorkflow.id,
+        name: savedWorkflow.name,
+        active: savedWorkflow.active,
+        createdAt: savedWorkflow.createdAt,
     }
-
-    const workflowData=await prisma.workflow.create({
-        data:{
-            name:name,
-            userId:id
-        }
+    console.log("workflow is saved",savedWorkflow.id);
+    res.status(200).json({
+      message:"Workflow is save",
+      data:saveddata
     })
-    return res.status(201).json({
-        message:"workflow is created",
-        workflowData
-    })
-   
-    }catch(e){
-        console.error(e);
-        return res.status(500).json({
-          message: "Internal server error"
-        });
 
-    }
-})
+  } catch (error) {
+
+    res.status(500).json({
+      message :"failed to save workflow"
+    })
+  }
+});

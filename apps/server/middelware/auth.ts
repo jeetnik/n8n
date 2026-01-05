@@ -1,45 +1,41 @@
-import { type Response, type Request, type NextFunction } from "express";
-import jwt from "jsonwebtoken";
-const JWT_SECERT = "abcd";
-interface JWTPayload {
-  id: string;
-  email: string;
-}
+import type { User } from "db";
+import type { Request, Response, NextFunction } from "express";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "mysecret";
+
+
+const isLogged = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token = req.cookies;
+    if (!token)
+      return res.status(404).json({
+        message: "No Access token ",
+      });
+
+    const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+    req.user = decoded as decodeduser;
+    next();
+  } catch (error: any) {
+    if (error instanceof TokenExpiredError) {
+      return res.status(401).json({
+        error: error.message,
+      });
+    }
+    return res.status(401).json({
+      message: "Invalid or expired token",
+    });
+  }
+};
+export default isLogged;
+
+
+
+export type decodeduser = Pick<User, "id" | "email">;
+
 declare global {
   namespace Express {
     interface Request {
-      user?: JWTPayload;
+      user: decodeduser;
     }
-  }
-}
-export default function auth(req: Request, res: Response, next: NextFunction) {
-  try {
-    console.log("IN THE AUTH")
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(403).send({
-        message: "NO AUTHORIZTIOB IN HEADER",
-      });
-    }
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      return res.status(403).json({
-        message: "NO token in the header",
-      });
-    }
-    const decode = jwt.verify(token, JWT_SECERT) as JWTPayload;
-    if (typeof decode.id !== "string" || typeof decode.email !== "string") {
-      return res.status(403).send({
-        messgae: "INVALID TOKEN PAYLOAD",
-      });
-    }
-    req.user = decode;
-    console.log("user request is forwared");
-    next();
-  } catch (e) {
-    console.log(e);
-    res.status(404).send({
-      message: "INVALID TOKEN",
-    });
   }
 }

@@ -1,10 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll } from "bun:test";
 import { prisma } from "db";
 
-import userRouter from "../router/users";
-import { email } from "zod";
-
-let testuser: any;
 const BASE_URL = "http://localhost:4000";
 
 beforeAll(async () => {

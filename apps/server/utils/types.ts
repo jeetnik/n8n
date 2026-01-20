@@ -35,9 +35,9 @@ export const UserCredentialsSchema = z.object({
   appIcon: z.string(),
   apiName: z.string(),
   application: z.string(),
-   type: z.string().nullable().optional(),
+  type: z.string().nullable().optional(),
   userId: z.string(),
-  createdAt: z.coerce.date().optional(), 
+  createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   data: z.any()
 });

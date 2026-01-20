@@ -3,12 +3,13 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import { createHash, generateToken } from "../utils/helper";
 import ms, { type StringValue } from "ms";
+import isLogged from "../middelware/auth";
 
 const userRouter = Router();
 const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY || 15;
 const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY || "7d";
 userRouter.post("/signin", async (req: Request, res: Response) => {
-  try{
+  try {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({
@@ -38,13 +39,14 @@ userRouter.post("/signin", async (req: Request, res: Response) => {
       data: { refreshToken: refreshtoken, refreshTokenExpiry: expiresAt },
     });
 
-    res.status(200).json({ message: "login successful", userdata: updateUser });}catch(error){
-      return res.status(500).json({
-        messgae:"Internal server error"
-      })
+    res.status(200).json({ message: "login successful", userdata: updateUser });
+  } catch (error) {
+    return res.status(500).json({
+      messgae: "Internal server error"
+    })
 
-    }
-  
+  }
+
 });
 
 userRouter.post("/signup", async (req: Request, res: Response) => {
@@ -80,5 +82,33 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
   }
 });
 
+userRouter.get('/me', isLogged, async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(400).json({
+        message: "user not found"
+      })
+    };
+    const user = await prisma.user.findFirst({
+      where: { id: req.user.id },
+    });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" })
+    }
+    return res.status(200).json({ message: "User found", userdata: user })
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" })
+  }
 
+})
+
+userRouter.get('/google', async (req: Request, res: Response) => {
+  const url = oauth2Client.generateAuthUrl({
+    access_type: "offline", // important for refresh_token
+    scope: SCOPES,
+    prompt: "consent", // ensures refresh_token each time
+  });
+  res.redirect(url);
+})
 export default userRouter;

@@ -90,6 +90,7 @@ export const WorkflowSchema = z.object({
     id: z.string().optional(),
     userId: z.string().optional(),
     name: z.string(),
+    description: z.string().optional(),
     active: z.boolean(),
     tag: z.string().optional(),
     nodes: z.array(INodeSchema),

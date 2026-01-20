@@ -136,10 +136,11 @@ credRouter.put("/:credId", isLoggedIn, async (req: Request, res: Response) => {
         type: existingCred.type,
         appIcon: existingCred.appIcon,
         apiName: existingCred.apiName,
-        data:
+        data: (
           credData.data && credData.data.data
-            ? { ...(existingCred.data as Record<string, unknown>), ...credData.data.data }
-            : existingCred.data,
+            ? { ...((existingCred.data as Record<string, unknown>) ?? {}), ...credData.data.data }
+            : (existingCred.data as Record<string, unknown>) ?? {}
+        ) as object,
         updatedAt: new Date(),
       },
     });

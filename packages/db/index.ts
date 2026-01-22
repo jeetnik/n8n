@@ -10,3 +10,4 @@ const adapter=new PrismaPg(pool);
 export const prisma =new PrismaClient({adapter});
 
 export type  { User } from "./generated/prisma/client";
+export type { CredentialsI, PropertiesI, CredentialSubmitPayload, UserCredentials, IEdge, INode, Measured, NodeData, Position, Workflow } from "./types";

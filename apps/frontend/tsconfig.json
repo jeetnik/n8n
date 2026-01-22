@@ -5,7 +5,12 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@nen/db": ["../../packages/db/index.ts"]
+    }
   },
   "include": [
     "**/*.ts",

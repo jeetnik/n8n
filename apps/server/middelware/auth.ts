@@ -4,12 +4,12 @@ import jwt, { TokenExpiredError } from "jsonwebtoken";
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "mysecret";
 
 
-const isLogged = (req: Request, res: Response, next: NextFunction) => {
+const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.cookies;
+    const token = req.cookies?.accessToken;
     if (!token)
-      return res.status(404).json({
-        message: "No Access token ",
+      return res.status(401).json({
+        message: "No Access token",
       });
 
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
@@ -26,7 +26,9 @@ const isLogged = (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-export default isLogged;
+
+export { isLoggedIn };
+export default isLoggedIn;
 
 
 

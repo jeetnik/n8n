@@ -1,16 +1,13 @@
-import ms,{ type StringValue } from "ms";
-import config from "@nen/config";
+import ms, { type StringValue } from "ms";
 
-interface CookieOptionsArgs {
-  rememberMe?: boolean;
-}
+const nodeEnv = process.env.NODE_ENV || "development";
 
 export function generateCookieOptions() {
   const expiry = "7d";
   return {
     httpOnly: true,
-    secure: config.nodeEnv === "production",
-    sameSite: config.nodeEnv === "production" ? "none" as const : "lax" as const,
+    secure: nodeEnv === "production",
+    sameSite: nodeEnv === "production" ? "none" as const : "lax" as const,
     maxAge: ms(expiry as StringValue),
   };
 }

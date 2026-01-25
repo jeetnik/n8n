@@ -121,11 +121,12 @@ export default function LandingPage() {
                 < footer className="py-12 border-t border-white/5" >
                     <div className="container mx-auto px-4 max-w-6xl flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="flex items-center gap-2">
-                            <img src="/n8n-color.svg" alt="n8n logo" width={48} height={16} className="object-contain invert brightness-0" />
+                            <img src="/n8n-color.svg" alt="n8n logo" width={24} height={24} className="object-contain invert brightness-0" />
+
                         </div>
 
                         <div className="text-sm text-gray-500">
-                            © 2026 nEn Inc.
+                            © 2026 n8n Inc.
                         </div>
                     </div>
                 </footer >

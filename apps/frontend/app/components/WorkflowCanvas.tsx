@@ -1,16 +1,15 @@
 "use client";
 
-import { ReactFlow, ReactFlowProvider, Background, Node, Edge, Handle, Position, useNodesState, useEdgesState, useReactFlow } from '@xyflow/react';
+import { ReactFlow, ReactFlowProvider, Background, Node, Edge, Handle, Position } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { FaBolt } from "react-icons/fa";
 import { MdEmail, MdMessage } from "react-icons/md";
 import { SiOpenai } from "react-icons/si";
-import { useEffect } from 'react';
 
 // Custom Node Component
 const CustomNode = ({ data }: any) => {
     return (
-        <div className={`w-48 rounded-xl border ${data.isActive ? 'border-white/20 animate-pulse' : 'border-white/10'} bg-[#161719] p-4 shadow-xl cursor-grab active:cursor-grabbing hover:scale-105 transition-all duration-500 animate-in fade-in zoom-in-95`}>
+        <div className={`w-48 rounded-xl border ${data.isActive ? 'border-white/20 animate-pulse' : 'border-white/10'} bg-[#161719] p-4 shadow-xl cursor-grab active:cursor-grabbing hover:scale-105 transition-transform`}>
             {/* Input Handle (left side) */}
             {data.hasInput && <Handle type="target" position={Position.Left} className="w-3 h-3 !bg-gray-500 !border-2 !border-[#161719]" />}
 
@@ -40,7 +39,7 @@ const initialNodes: Node[] = [
     {
         id: '1',
         type: 'custom',
-        position: { x: 0, y: 100 },
+        position: { x: 50, y: 150 },
         data: {
             label: 'Webhook',
             description: 'POST /order/new',
@@ -53,7 +52,7 @@ const initialNodes: Node[] = [
     {
         id: '2',
         type: 'custom',
-        position: { x: 300, y: 0 },
+        position: { x: 350, y: 50 },
         data: {
             label: 'AI Analyze',
             description: 'Processing...',
@@ -66,7 +65,7 @@ const initialNodes: Node[] = [
     {
         id: '3',
         type: 'custom',
-        position: { x: 300, y: 200 },
+        position: { x: 350, y: 250 },
         data: {
             label: 'Gmail',
             description: 'Send Email',
@@ -79,7 +78,7 @@ const initialNodes: Node[] = [
     {
         id: '4',
         type: 'custom',
-        position: { x: 600, y: 100 },
+        position: { x: 650, y: 150 },
         data: {
             label: 'Telegram',
             description: 'Send Message',
@@ -92,113 +91,11 @@ const initialNodes: Node[] = [
 ];
 
 // Define edges (connections)
-const finalEdges: Edge[] = [
+const initialEdges: Edge[] = [
     { id: 'e1-2', source: '1', target: '2', animated: true, style: { stroke: '#555', strokeWidth: 2 } },
     { id: 'e1-3', source: '1', target: '3', animated: true, style: { stroke: '#555', strokeWidth: 2 } },
     { id: 'e2-4', source: '2', target: '4', animated: true, style: { stroke: '#555', strokeWidth: 2 } },
 ];
-
-const CanvasContent = () => {
-    const { fitView } = useReactFlow();
-    const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-
-    useEffect(() => {
-        let isMounted = true;
-
-        const runAnimation = async () => {
-            if (!isMounted) return;
-
-            // Reset
-            setNodes([]);
-            setEdges([]);
-
-            // 1. Webhook
-            await new Promise(r => setTimeout(r, 500));
-            if (!isMounted) return;
-
-            setNodes((nds) => {
-                const newNodes = [...nds, initialNodes[0]!];
-                setTimeout(() => fitView({ padding: 0.2, duration: 400 }), 50);
-                return newNodes;
-            });
-
-            // 2. AI Analyze
-            await new Promise(r => setTimeout(r, 800));
-            if (!isMounted) return;
-
-            setNodes((nds) => {
-                const newNodes = [...nds, initialNodes[1]!];
-                setTimeout(() => fitView({ padding: 0.2, duration: 400 }), 50);
-                return newNodes;
-            });
-
-            // 3. Telegram
-            await new Promise(r => setTimeout(r, 800));
-            if (!isMounted) return;
-
-            setNodes((nds) => {
-                const newNodes = [...nds, initialNodes[3]!];
-                setTimeout(() => fitView({ padding: 0.2, duration: 400 }), 50);
-                return newNodes;
-            });
-
-            // 4. Gmail
-            await new Promise(r => setTimeout(r, 800));
-            if (!isMounted) return;
-
-            setNodes((nds) => {
-                const newNodes = [...nds, initialNodes[2]!];
-                setTimeout(() => fitView({ padding: 0.2, duration: 400 }), 50);
-                return newNodes;
-            });
-
-            // 5. Connect all
-            await new Promise(r => setTimeout(r, 800));
-            if (!isMounted) return;
-
-            setEdges(finalEdges);
-            setTimeout(() => fitView({ padding: 0.2, duration: 800 }), 100);
-
-            // 6. Loop after delay
-            await new Promise(r => setTimeout(r, 3000));
-            if (isMounted) runAnimation();
-        };
-
-        runAnimation();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [fitView, setNodes, setEdges]);
-
-    return (
-        <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            nodeTypes={nodeTypes}
-            fitView
-            fitViewOptions={{ padding: 0.2 }}
-            nodesDraggable={false}
-            panOnScroll={false}
-            zoomOnScroll={false}
-            zoomOnPinch={false}
-            panOnDrag={false}
-            zoomOnDoubleClick={false}
-            className="bg-[#0A0A0A]"
-            proOptions={{ hideAttribution: true }}
-            minZoom={0.1}
-            maxZoom={1.5}
-            defaultEdgeOptions={{
-                animated: true,
-            }}
-        >
-            <Background color="#333" gap={24} size={1} />
-        </ReactFlow>
-    );
-};
 
 export default function WorkflowCanvas() {
     return (
@@ -213,7 +110,22 @@ export default function WorkflowCanvas() {
             </div>
 
             <ReactFlowProvider>
-                <CanvasContent />
+                <ReactFlow
+                    nodes={initialNodes}
+                    edges={initialEdges}
+                    nodeTypes={nodeTypes}
+                    fitView
+                    nodesDraggable={true}
+                    className="bg-[#0A0A0A]"
+                    proOptions={{ hideAttribution: true }}
+                    minZoom={0.5}
+                    maxZoom={1.5}
+                    defaultEdgeOptions={{
+                        animated: true,
+                    }}
+                >
+                    <Background color="#333" gap={24} size={1} />
+                </ReactFlow>
             </ReactFlowProvider>
         </div>
     );

@@ -94,8 +94,9 @@ export function AppSidebar() {
         <div className={`flex items-center ${state === "collapsed" ? "justify-center" : "justify-between"}`}>
           {state === "expanded" && (
             <SidebarGroupLabel>
-              <div className="flex items-center pl-0">
-                <img src="/n8n-color.svg" alt="n8n" width={24} height={24} className="object-contain invert brightness-0" />
+              <div className="flex items-baseline">
+                <div className="h-1 w-[18px] bg-white/20" />
+                <span className="text-[26px] font-extrabold text-white leading-none">nEn</span>
               </div>
             </SidebarGroupLabel>
           )}

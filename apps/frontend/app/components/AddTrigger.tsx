@@ -22,7 +22,7 @@ export interface AddTriggerNodeData {
 export function AddTrigger() {
   const [isOpen, setIsOpen] = useState(false);
 
-   const getTriggerIcon = (type: string) => {
+  const getTriggerIcon = (type: string) => {
     switch (type?.toLowerCase()) {
       case "manual":
         return <Hand className="w-5 h-5 text-blue-600" />;
@@ -37,13 +37,13 @@ export function AddTrigger() {
   const getTypeBadgeColor = (type: string) => {
     switch (type?.toLowerCase()) {
       case "manual":
-        return "bg-blue-100 text-blue-700 border-blue-200";
+        return "bg-blue-900/30 text-blue-300 border-blue-800/50";
       case "webhook":
-        return "bg-green-100 text-green-700 border-green-200";
+        return "bg-green-900/30 text-green-300 border-green-800/50";
       case "schedule":
-        return "bg-purple-100 text-purple-700 border-purple-200";
+        return "bg-purple-900/30 text-purple-300 border-purple-800/50";
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return "bg-white/10 text-gray-300 border-white/20";
     }
   };
 
@@ -56,10 +56,10 @@ export function AddTrigger() {
   };
 
   return (
-    <div className="bg-teal-50 border border-dashed py-4 border-teal-400 rounded-lg shadow-md flex flex-col items-center justify-center gap-2 w-20">
+    <div className="bg-orange-50 border border-dashed py-4 border-orange-400 rounded-lg shadow-md flex flex-col items-center justify-center gap-2 w-20">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <button className="cursor-pointer w-[60px] px-2 py-1 text-[10px] rounded-sm bg-teal-500 hover:bg-teal-600 text-white transition-all duration-200 shadow">
+          <button className="cursor-pointer w-[60px] px-2 py-1 text-[10px] rounded-sm bg-orange-600 hover:bg-orange-700 text-white transition-all duration-200 shadow">
             Trigger
           </button>
         </SheetTrigger>
@@ -79,7 +79,7 @@ export function AddTrigger() {
               triggers.map((trigger, idx) => (
                 <div
                   key={trigger.id || idx}
-                  className="group mx-4 p-2 border border-gray-200 rounded-lg hover:border-teal-300 hover:shadow-md cursor-pointer transition-all duration-200 bg-white hover:bg-teal-50"
+                  className="group mx-4 p-2 border border-white/20 rounded-lg hover:border-white/30 hover:shadow-md cursor-pointer transition-all duration-200 bg-white/5 hover:bg-white/10"
                   onClick={() => handleTriggerSelect(trigger)}
                 >
                   <div className="flex items-start gap-3">
@@ -89,7 +89,7 @@ export function AddTrigger() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">
+                        <h3 className="font-semibold text-white group-hover:text-gray-200 transition-colors">
                           {trigger.name}
                         </h3>
                         <span
@@ -100,15 +100,15 @@ export function AddTrigger() {
                       </div>
 
                       {trigger.description && (
-                        <p className="text-sm text-gray-600 group-hover:text-gray-700 leading-relaxed">
+                        <p className="text-sm text-gray-400 group-hover:text-gray-300 leading-relaxed">
                           {trigger.description}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-1 pt-1 border-t border-transparent group-hover:border-teal-200 transition-all duration-200">
-                    <span className="text-xs text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <div className="mt-1 pt-1 border-t border-transparent group-hover:border-white/20 transition-all duration-200">
+                    <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       Click to add this trigger
                     </span>
                   </div>
@@ -116,19 +116,19 @@ export function AddTrigger() {
               ))
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-500 font-medium">
+                <p className="text-gray-400 font-medium">
                   No triggers available
                 </p>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-500 mt-1">
                   Triggers will appear here when loaded
                 </p>
               </div>
             )}
           </div>
 
-          <SheetFooter className="mt-6 border-t">
+          <SheetFooter className="mt-6 border-t border-white/10">
             <SheetClose asChild>
-              <Button className="bg-teal-900 w-full sm:w-auto">Close</Button>
+              <Button className="bg-white/10 hover:bg-white/20 border border-white/20 text-white w-full sm:w-auto">Close</Button>
             </SheetClose>
           </SheetFooter>
         </SheetContent>

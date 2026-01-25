@@ -90,13 +90,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
-      <SidebarHeader className="hover:bg-[#f7f1e6]">
+      <SidebarHeader className="hover:bg-white/5">
         <div className={`flex items-center ${state === "collapsed" ? "justify-center" : "justify-between"}`}>
           {state === "expanded" && (
             <SidebarGroupLabel>
-              <div className="flex items-baseline">
-                <div className="h-1 w-[18px] bg-[#0d9488]" />
-                <span className="text-[26px] font-extrabold text-[#201515] leading-none">nEn</span>
+              <div className="flex items-center pl-0">
+                <img src="/n8n-color.svg" alt="n8n" width={24} height={24} className="object-contain invert brightness-0" />
               </div>
             </SidebarGroupLabel>
           )}
@@ -113,8 +112,8 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <Link href={item.url}>
-                        <item.icon className={isActive ? "text-teal-500" : undefined} />
-                        <span className={`text-base ${isActive ? "text-teal-500" : ""}`}>{item.title}</span>
+                        <item.icon className={isActive ? "text-white" : "text-gray-400"} />
+                        <span className={`text-base ${isActive ? "text-white font-medium" : "text-gray-400"}`}>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -127,14 +126,14 @@ export function AppSidebar() {
       <SidebarFooter>
         <button
           onClick={handleProfile}
-          className={`flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full rounded-md ${state === "collapsed" ? "justify-center" : ""}`}
+          className={`flex items-center gap-3 p-2 hover:bg-white/10 transition-colors w-full rounded-md ${state === "collapsed" ? "justify-center" : ""}`}
         >
           <div className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-white text-xs font-semibold ${getRandomColor(user?.name)}`}>
             {getInitials(user?.name)}
           </div>
           {state === "expanded" && (
             <div className="flex flex-col items-start flex-1 min-w-0">
-              <span className="font-medium text-sm truncate w-full">
+              <span className="font-medium text-sm truncate w-full text-white">
                 {user?.name || "User"}
               </span>
             </div>

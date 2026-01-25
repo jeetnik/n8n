@@ -178,7 +178,7 @@ export const ActionForm = ({
         >
           <ArrowLeft className="w-4 h-4" />
         </Button>
-        <DialogTitle className="font-semibold text-teal-600 text-lg">
+        <DialogTitle className="font-semibold text-white text-lg">
           Configure {action.name}
         </DialogTitle>
       </div>
@@ -261,7 +261,7 @@ export const ActionForm = ({
             {field.type === "text" && (
               <input
                 type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-white/10 bg-white/5 text-white rounded-md focus:outline-none focus:ring-1 focus:ring-white/20"
                 value={formData[field.name] || ""}
                 onChange={(e) => handleInputChange(field.name, e.target.value)}
                 required={field.required}
@@ -272,7 +272,7 @@ export const ActionForm = ({
             {field.type === "password" && (
               <input
                 type="password"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-white/10 bg-white/5 text-white rounded-md focus:outline-none focus:ring-1 focus:ring-white/20"
                 value={formData[field.name] || ""}
                 onChange={(e) => handleInputChange(field.name, e.target.value)}
                 required={field.required}
@@ -282,7 +282,7 @@ export const ActionForm = ({
 
             {field.type === "textarea" && (
               <textarea
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-white/10 bg-white/5 text-white rounded-md focus:outline-none focus:ring-1 focus:ring-white/20"
                 rows={3}
                 value={formData[field.name] || ""}
                 onChange={(e) => handleInputChange(field.name, e.target.value)}
@@ -293,7 +293,7 @@ export const ActionForm = ({
 
             {field.type === "select" && (
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-white/10 bg-white/5 text-white rounded-md focus:outline-none focus:ring-1 focus:ring-white/20"
                 value={formData[field.name] || ""}
                 onChange={(e) => handleInputChange(field.name, e.target.value)}
                 required={field.required}
@@ -310,7 +310,7 @@ export const ActionForm = ({
             {field.type === "number" && (
               <input
                 type="number"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-white/10 bg-white/5 text-white rounded-md focus:outline-none focus:ring-1 focus:ring-white/20"
                 value={formData[field.name] || ""}
                 onChange={(e) => handleInputChange(field.name, e.target.value)}
                 required={field.required}
@@ -322,14 +322,14 @@ export const ActionForm = ({
             )}
 
             {field.type === "toggle" && (
-              <div className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-md">
                 <Switch
                   checked={formData[field.name] || field.defaultValue || false}
                   onCheckedChange={(checked) => handleToggleChange(field, checked)}
-                  className="data-[state=checked]:bg-teal-500"
+                  className="data-[state=checked]:bg-white/20"
                 />
                 <div className="flex-1">
-                  <p className="text-sm text-blue-800">
+                  <p className="text-sm text-gray-300">
                     {formData[field.name]
                       ? `Using: ${field.autoPopulateTemplate}`
                       : "Use manual input"}
@@ -357,7 +357,7 @@ export const ActionForm = ({
           </Button>
           <Button
             type="submit"
-            className="flex-1 bg-teal-500 hover:bg-teal-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 bg-white hover:bg-gray-200 text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isSubmitting || !hasRequiredCredentials}
           >
             {isSubmitting ? "Adding..." : "Add Action"}

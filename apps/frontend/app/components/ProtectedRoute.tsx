@@ -37,10 +37,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (isAuthenticated === null) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center">
+      <div className="min-h-screen w-full flex items-center justify-center bg-black">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-teal-600">Loading...</span>
+          <span className="text-teal-400 font-medium">Checking authentication...</span>
         </div>
       </div>
     );

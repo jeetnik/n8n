@@ -39,13 +39,10 @@ const components: { title: string; href: string; description: string }[] = [
 
 export default function Navbar() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-10 py-2 bg-black/80 backdrop-blur-md border-b border-white/10">
+    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14 bg-black/80 backdrop-blur-md border-b border-white/10">
       <div className="flex items-center gap-8">
         <Link href="/" className="flex items-center gap-2">
-          <svg width="80" height="28" viewBox="0 0 80 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect y="20" width="18" height="4" fill="#0d9488" />
-            <text x="18" y="24" fill="#ffffff" fontFamily="system-ui, sans-serif" fontWeight="800" fontSize="26">nEn</text>
-          </svg>
+          <img src="/n8n-color.svg" alt="n8n logo" width={60} height={22} className="object-contain invert brightness-0" />
         </Link>
 
         <NavigationMenu className="hidden md:flex">
@@ -119,7 +116,7 @@ export default function Navbar() {
         <Button asChild variant="ghost" className="bg-none text-gray-200 hover:text-white hover:bg-white/10">
           <Link href="/signin">Login</Link>
         </Button>
-        <Button asChild className="bg-teal-600 hover:bg-teal-700 text-white rounded-3xl">
+        <Button asChild className="bg-white hover:bg-gray-200 text-black font-semibold rounded-3xl">
           <Link href="/signup">Sign up</Link>
         </Button>
       </div>

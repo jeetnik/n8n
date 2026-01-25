@@ -95,7 +95,7 @@ const CreateWorkflowContent = () => {
         isSaving={isSaving}
         getViewportCenter={getViewportCenter}
       />
-      <div className="flex-1">
+      <div className="flex-1 bg-[#0C0D0E]">
         <ReactFlow
           className="h-full w-full"
           nodes={nodes}
@@ -114,7 +114,7 @@ const CreateWorkflowContent = () => {
               onClick={() => { }}
             />
           </Controls>
-          <Background />
+          <Background color="#1a1b1e" gap={16} size={2} />
           <MiniMap nodeStrokeWidth={3} />
         </ReactFlow>
       </div>

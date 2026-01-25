@@ -65,6 +65,7 @@ export const DynamicActionForm = ({
                             onChange={(e) => handleChange(field.name, e.target.value)}
                             placeholder={field.placeholder}
                             required={field.required}
+                            className="bg-white/5 border-white/10 text-white focus:ring-1 focus:ring-white/20"
                         />
                     )}
 
@@ -75,6 +76,7 @@ export const DynamicActionForm = ({
                             onChange={(e) => handleChange(field.name, e.target.value)}
                             placeholder={field.placeholder}
                             required={field.required}
+                            className="bg-white/5 border-white/10 text-white focus:ring-1 focus:ring-white/20 min-h-[100px]"
                         />
                     )}
 
@@ -83,10 +85,10 @@ export const DynamicActionForm = ({
                             value={formData[field.name] || ""}
                             onValueChange={(value) => handleChange(field.name, value)}
                         >
-                            <SelectTrigger>
+                            <SelectTrigger className="bg-white/5 border-white/10 text-white focus:ring-1 focus:ring-white/20">
                                 <SelectValue placeholder={field.placeholder || "Select option"} />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-zinc-900 border-white/10">
                                 {field.options.map((option: string) => (
                                     <SelectItem key={option} value={option}>
                                         {option}
@@ -97,13 +99,14 @@ export const DynamicActionForm = ({
                     )}
 
                     {field.type === "toggle" && (
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 bg-white/5 p-3 rounded-lg border border-white/10">
                             <Switch
                                 id={field.name}
                                 checked={formData[field.name] || false}
                                 onCheckedChange={(checked) => handleChange(field.name, checked)}
+                                className="data-[state=checked]:bg-white/20"
                             />
-                            <span className="text-sm text-gray-500">{field.description}</span>
+                            <span className="text-sm text-gray-400">{field.description}</span>
                         </div>
                     )}
 
@@ -113,11 +116,21 @@ export const DynamicActionForm = ({
                 </div>
             ))}
 
-            <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={onCancel}>
+            <div className="flex justify-end gap-3 pt-6 border-t border-white/5">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onCancel}
+                    className="border-white/10 hover:bg-white/5 text-white"
+                >
                     Cancel
                 </Button>
-                <Button type="submit">Save Changes</Button>
+                <Button
+                    type="submit"
+                    className="bg-white hover:bg-gray-200 text-black font-semibold"
+                >
+                    Save Changes
+                </Button>
             </div>
         </form>
     );

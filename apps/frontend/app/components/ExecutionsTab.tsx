@@ -214,11 +214,11 @@ export const ExecutionsTabImproved = () => {
       {/* Header with Filter */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h3 className="text-lg font-semibold text-gray-800">Workflow Executions</h3>
+          <h3 className="text-lg font-semibold text-white">Workflow Executions</h3>
           <div
             className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${connected
-                ? 'bg-green-100 text-green-700'
-                : 'bg-gray-100 text-gray-500'
+              ? 'bg-green-900/30 text-green-300'
+              : 'bg-white/5 text-gray-400'
               }`}
             title={connected ? "Live updates active" : "Connecting..."}
           >
@@ -230,11 +230,11 @@ export const ExecutionsTabImproved = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">Filter:</span>
+          <span className="text-sm font-medium text-gray-300">Filter:</span>
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="px-3 py-1.5 border border-white/20 rounded-lg text-sm bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
           >
             <option value="all">All Statuses</option>
             <option value="COMPLETED">Completed</option>
@@ -255,7 +255,7 @@ export const ExecutionsTabImproved = () => {
 
       {/* Empty State */}
       {!loading && workflowGroups.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-gray-400">
           <Clock className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="text-lg font-medium">No executions found</p>
           <p className="text-sm mt-1">Execute a workflow to see results here</p>
@@ -266,25 +266,25 @@ export const ExecutionsTabImproved = () => {
       {!loading && workflowGroups.length > 0 && (
         <div className="space-y-3 min-w-0">
           {workflowGroups.map((group) => (
-            <Card key={group.workflowId} className="border border-gray-200 overflow-hidden py-0 gap-0 min-w-0 max-w-full">
+            <Card key={group.workflowId} className="border border-white/10 overflow-hidden py-0 gap-0 min-w-0 max-w-full bg-white/5 rounded-xl">
               {/* Workflow Header */}
               <div
                 onClick={() => toggleWorkflow(group.workflowId)}
                 onMouseEnter={() => setHoveredWorkflow(group.workflowId)}
                 onMouseLeave={() => setHoveredWorkflow(null)}
-                className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                className="p-4 cursor-pointer hover:bg-white/10 transition-colors"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
-                    <h4 className="font-semibold text-gray-900">{group.workflowName}</h4>
+                    <h4 className="font-semibold text-white">{group.workflowName}</h4>
                     {hoveredWorkflow === group.workflowId && (
                       expandedWorkflows.has(group.workflowId) ? (
-                        <ChevronDown className="w-[1em] h-[1em] text-gray-600" />
+                        <ChevronDown className="w-[1em] h-[1em] text-gray-400" />
                       ) : (
-                        <ChevronRight className="w-[1em] h-[1em] text-gray-600" />
+                        <ChevronRight className="w-[1em] h-[1em] text-gray-400" />
                       )
                     )}
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-400">
                       Last run: {formatRelativeTime(group.lastRun)}
                     </p>
                   </div>
@@ -292,29 +292,29 @@ export const ExecutionsTabImproved = () => {
                   <div className="flex items-center gap-4">
                     {/* Active Status Label - Middle */}
                     <span className={`px-2 py-1 rounded text-xs font-medium ${group.isActive
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-gray-100 text-gray-700'
+                      ? 'bg-green-900/30 text-green-300'
+                      : 'bg-white/5 text-gray-400'
                       }`}>
                       {group.isActive ? 'Active' : 'Not Active'}
                     </span>
 
                     {/* Stats Badges */}
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                      <span className="px-2 py-1 rounded-md text-xs font-medium bg-white/10 text-gray-300">
                         {group.stats.total} total
                       </span>
                       {group.stats.completed > 0 && (
-                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700">
+                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-green-900/30 text-green-300">
                           {group.stats.completed}
                         </span>
                       )}
                       {group.stats.failed > 0 && (
-                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-red-100 text-red-700">
+                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-red-900/30 text-red-300">
                           {group.stats.failed}
                         </span>
                       )}
                       {group.stats.running > 0 && (
-                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 animate-pulse">
+                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-blue-900/30 text-blue-300 animate-pulse">
                           {group.stats.running}
                         </span>
                       )}
@@ -325,8 +325,8 @@ export const ExecutionsTabImproved = () => {
 
               {/* Executions List (Expanded) */}
               {expandedWorkflows.has(group.workflowId) && (
-                <div className="border-t border-gray-200 bg-gray-50 min-w-0 max-w-full">
-                  <div className="divide-y divide-gray-200 min-w-0">
+                <div className="border-t border-white/10 bg-black min-w-0 max-w-full">
+                  <div className="divide-y divide-white/10 min-w-0">
                     {group.executions.map((exec) => {
                       const isExpanded = expandedExecutions.has(exec.id);
                       const details = executionDetails.get(exec.id);
@@ -338,7 +338,7 @@ export const ExecutionsTabImproved = () => {
                             onClick={() => toggleExecution(exec.id)}
                             onMouseEnter={() => setHoveredExecution(exec.id)}
                             onMouseLeave={() => setHoveredExecution(null)}
-                            className="p-3 hover:bg-white cursor-pointer transition-colors min-w-0"
+                            className="p-3 hover:bg-white/5 cursor-pointer transition-colors min-w-0"
                           >
                             <div className="flex items-center justify-between gap-4 min-w-0">
                               <div className="flex items-center gap-2 text-sm min-w-0">
@@ -387,7 +387,7 @@ export const ExecutionsTabImproved = () => {
 
                           {/* Execution Details (Expanded) */}
                           {isExpanded && (
-                            <div className="bg-white border-t border-gray-200 p-4 min-w-0 overflow-hidden">
+                            <div className="bg-black border-t border-white/10 p-4 min-w-0 overflow-hidden">
                               {isLoadingDetails && (
                                 <div className="flex justify-center items-center py-8">
                                   <div className="h-6 w-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
@@ -398,27 +398,27 @@ export const ExecutionsTabImproved = () => {
                               {!isLoadingDetails && details && (
                                 <div className="space-y-4 min-w-0">
                                   {/* Overview */}
-                                  <Card className="border-gray-200 min-w-0">
+                                  <Card className="border-white/10 bg-white/5 min-w-0 rounded-xl">
                                     <CardContent className="py-4">
                                       <div className="grid grid-cols-2 gap-4 text-sm">
                                         <div>
-                                          <p className="text-gray-500 mb-1">Execution ID</p>
-                                          <p className="font-mono text-xs break-all">{details.id}</p>
+                                          <p className="text-gray-400 mb-1">Execution ID</p>
+                                          <p className="font-mono text-xs break-all text-gray-300">{details.id}</p>
                                         </div>
                                         <div>
-                                          <p className="text-gray-500 mb-1">Duration</p>
-                                          <p className="font-medium">{formatDuration(details.duration)}</p>
+                                          <p className="text-gray-400 mb-1">Duration</p>
+                                          <p className="font-medium text-white">{formatDuration(details.duration)}</p>
                                         </div>
                                         <div>
-                                          <p className="text-gray-500 mb-1">Started At</p>
-                                          <p className="font-medium flex items-center gap-1">
+                                          <p className="text-gray-400 mb-1">Started At</p>
+                                          <p className="font-medium flex items-center gap-1 text-white">
                                             <Calendar className="w-3 h-3" />
                                             {new Date(details.startedAt).toLocaleString()}
                                           </p>
                                         </div>
                                         <div>
-                                          <p className="text-gray-500 mb-1">Finished At</p>
-                                          <p className="font-medium">
+                                          <p className="text-gray-400 mb-1">Finished At</p>
+                                          <p className="font-medium text-white">
                                             {details.finishedAt
                                               ? new Date(details.finishedAt).toLocaleString()
                                               : "In progress"}
@@ -430,13 +430,13 @@ export const ExecutionsTabImproved = () => {
 
                                   {/* Error Display */}
                                   {details.error && (
-                                    <Card className="border-red-200 bg-red-50 min-w-0">
+                                    <Card className="border-red-900/30 bg-red-950/20 min-w-0 rounded-xl">
                                       <CardContent className="pt-4 min-w-0">
                                         <div className="flex items-start gap-2">
-                                          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                                          <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                                           <div className="min-w-0 overflow-hidden">
-                                            <h4 className="font-semibold text-red-900 mb-1">Error</h4>
-                                            <p className="text-sm text-red-800 wrap-break-word font-mono overflow-wrap-anywhere">
+                                            <h4 className="font-semibold text-red-300 mb-1">Error</h4>
+                                            <p className="text-sm text-red-200 wrap-break-word font-mono overflow-wrap-anywhere">
                                               {details.error}
                                             </p>
                                           </div>
@@ -448,7 +448,7 @@ export const ExecutionsTabImproved = () => {
                                   {/* Node Results */}
                                   {details.nodeResults && details.nodeResults.length > 0 && (
                                     <div className="min-w-0">
-                                      <h4 className="font-semibold text-gray-900 mb-3">Node Execution Results</h4>
+                                      <h4 className="font-semibold text-white mb-3">Node Execution Results</h4>
                                       <div className="space-y-2 min-w-0">
                                         {details.nodeResults.map((nodeResult: any, index: number) => (
                                           <Card key={index} className="border border-gray-200 min-w-0 max-w-full">

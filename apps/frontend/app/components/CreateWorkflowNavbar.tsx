@@ -138,9 +138,9 @@ export function CreateWorkflowNavbar({
   }, [projectName]);
 
   return (
-    <nav className="w-full flex items-center justify-between py-2 px-3 mt-1 border-b bg-white">
+    <nav className="w-full flex items-center justify-between py-4 px-3 mt-1 border-b border-white/10 bg-black">
       <div className="flex items-center gap-2">
-        <div className="h-5 w-1 rounded bg-teal-600"></div>
+        <div className="h-5 w-1 rounded bg-white/20"></div>
         {isEditingName ? (
           <input
             ref={inputRef}
@@ -149,11 +149,11 @@ export function CreateWorkflowNavbar({
             onChange={(e) => setEditedName(e.target.value)}
             onBlur={handleNameBlur}
             onKeyDown={handleNameKeyDown}
-            className="text-xl font-semibold text-gray-800 bg-transparent border-b-2 border-teal-500 focus:outline-none px-1 min-w-[200px]"
+            className="text-xl font-semibold text-white bg-transparent border-b-2 border-white/30 focus:outline-none px-1 min-w-[200px]"
           />
         ) : (
           <h2
-            className="text-xl font-semibold text-gray-800 cursor-pointer hover:text-teal-600 transition-colors"
+            className="text-xl font-semibold text-white cursor-pointer hover:text-gray-300 transition-colors"
             onClick={handleNameClick}
           >
             {projectName}
@@ -163,22 +163,22 @@ export function CreateWorkflowNavbar({
 
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700 hidden sm:inline">
+          <span className="text-sm font-medium text-gray-300 hidden sm:inline">
             Active
           </span>
           <Switch
             checked={isActive}
             onCheckedChange={onActiveToggle}
-            className="data-[state=checked]:bg-teal-500"
+            className="data-[state=checked]:bg-white/20"
           />
-          <span className="text-xs text-gray-500 sm:hidden">
+          <span className="text-xs text-gray-400 sm:hidden">
             {isActive ? "On" : "Off"}
           </span>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
           <DialogTrigger asChild>
-            <Button className="bg-white text-black cursor-pointer border border-b-3 hover:bg-teal-100 border-neutral-700">
+            <Button className="bg-white/10 text-white cursor-pointer border border-white/20 hover:bg-white/20 rounded-lg">
               Add Action
             </Button>
           </DialogTrigger>
@@ -186,7 +186,7 @@ export function CreateWorkflowNavbar({
           <DialogContent>
             {dialogState === "actions" && (
               <div className="flex flex-col max-h-[50vh] overflow-scroll">
-                <DialogTitle className="font-semibold text-teal-600 text-lg mb-2">
+                <DialogTitle className="font-semibold text-white text-lg mb-2">
                   Select the Action
                 </DialogTitle>
                 {availableActions.map((action) => {
@@ -194,7 +194,7 @@ export function CreateWorkflowNavbar({
                     <div className="ml-5" key={action.id}>
                       <div
                         onClick={() => handleActionSelect(action)}
-                        className="flex cursor-pointer bg-teal-50 items-center w-[90%] gap-2 py-1 my-1 px-2 border border-neutral-300 rounded-sm hover:bg-teal-100 transition-colors"
+                        className="flex cursor-pointer bg-white/5 items-center w-[90%] gap-2 py-1 my-1 px-2 border border-white/20 rounded-lg hover:bg-white/10 transition-colors text-white"
                       >
                         <span>{action.icon}</span>
                         <div>{action.name}</div>
@@ -219,7 +219,7 @@ export function CreateWorkflowNavbar({
           <DialogTrigger asChild>
             <Button
               disabled={isSaving}
-              className="bg-teal-600 hover:bg-teal-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
             >
               {isSaving ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -266,9 +266,8 @@ export function CreateWorkflowNavbar({
               <div className="space-y-2">
                 <div className="text-sm font-medium text-neutral-700">Status:</div>
                 <div className="text-base">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                  }`}>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+                    }`}>
                     {isActive ? "Active" : "Inactive"}
                   </span>
                 </div>

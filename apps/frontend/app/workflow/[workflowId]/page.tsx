@@ -158,7 +158,7 @@ const WorkflowContent = () => {
         isViewMode={true}
         getViewportCenter={getViewportCenter}
       />
-      <div className="flex-1 relative">
+      <div className="flex-1 relative bg-[#0C0D0E]">
         <ReactFlow
           className="h-full w-full"
           nodes={nodesWithStatus}
@@ -177,7 +177,7 @@ const WorkflowContent = () => {
               onClick={() => { }}
             />
           </Controls>
-          <Background />
+          <Background color="#1a1b1e" gap={16} size={2} />
           <MiniMap nodeStrokeWidth={3} nodeColor="#14b8a6" zoomable pannable />
         </ReactFlow>
 
@@ -195,10 +195,10 @@ const WorkflowContent = () => {
                   <div className="flex items-center gap-2">
                     <span
                       className={`font-semibold ${event.status === "started"
-                          ? "text-orange-600"
-                          : event.status === "completed"
-                            ? "text-green-600"
-                            : "text-red-600"
+                        ? "text-orange-600"
+                        : event.status === "completed"
+                          ? "text-green-600"
+                          : "text-red-600"
                         }`}
                     >
                       {event.status === "started" ? "▶" : event.status === "completed" ? "✓" : "✗"}
@@ -206,10 +206,10 @@ const WorkflowContent = () => {
                     <span className="text-gray-600 font-medium">{event.nodeId}</span>
                     <span
                       className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${event.status === "started"
-                          ? "bg-orange-100 text-orange-700"
-                          : event.status === "completed"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
+                        ? "bg-orange-100 text-orange-700"
+                        : event.status === "completed"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
                         }`}
                     >
                       {event.status.toUpperCase()}

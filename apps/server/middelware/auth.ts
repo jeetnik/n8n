@@ -1,24 +1,31 @@
-import type { User } from "db";
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "mysecret";
+import dotenv from "dotenv";
+import type { decodedUser } from "../config/types";
 
+dotenv.config();
 
-const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
+export const isLoggedIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { accessToken } = req.cookies;
+
+  if (!accessToken) {
+    return res.status(401).json({
+      message: "No access token provided",
+    });
+  }
+
   try {
-    const token = req.cookies?.accessToken;
-    if (!token)
-      return res.status(401).json({
-        message: "No Access token",
-      });
-
-    const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
-    req.user = decoded as decodeduser;
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!);
+    req.user = decoded as decodedUser;
     next();
   } catch (error: any) {
     if (error instanceof TokenExpiredError) {
       return res.status(401).json({
-        error: error.message,
+        message: "Token expired",
       });
     }
     return res.status(401).json({
@@ -26,18 +33,3 @@ const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-
-export { isLoggedIn };
-export default isLoggedIn;
-
-
-
-export type decodeduser = Pick<User, "id" | "email">;
-
-declare global {
-  namespace Express {
-    interface Request {
-      user: decodeduser;
-    }
-  }
-}

@@ -108,25 +108,47 @@ const CreateWorkflowContent = () => {
           fitView
           fitViewOptions={fitViewOptions}
           defaultEdgeOptions={defaultEdgeOptions}
+          nodesDraggable={true}
+          snapToGrid={true}
         >
-          <Controls>
-            <ControlButton
-              onClick={() => { }}
-            />
-          </Controls>
-          <Background color="#1a1b1e" gap={16} size={2} />
-          <MiniMap nodeStrokeWidth={3} />
+          <Controls
+            className="!bg-[#1a1b1e] !border-white/10 [&>button]:!bg-[#1a1b1e] [&>button]:!border-b-white/5 [&>button]:!text-gray-400 [&>button]:!fill-gray-400 hover:[&>button]:!bg-white/10 hover:[&>button]:!text-white hover:[&>button]:!fill-white"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '4px',
+              gap: '4px',
+              borderRadius: '8px',
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          />
+          <Background color="#333" gap={16} size={1} className="bg-[#0C0D0E]" />
+          <MiniMap
+            nodeStrokeWidth={3}
+            zoomable
+            pannable
+            className="bg-[#1a1b1e] border border-white/10 rounded-lg overflow-hidden"
+            maskColor="rgba(0, 0, 0, 0.6)"
+            nodeColor="#333"
+          />
         </ReactFlow>
       </div>
     </div>
   );
 };
 
+import { SidebarNavigation } from "@/app/components/SidebarNavigation";
+
 function CreateWorkflowPage() {
   return (
-    <ReactFlowProvider>
-      <CreateWorkflowContent />
-    </ReactFlowProvider>
+    <div className="flex h-screen w-full bg-black">
+      <SidebarNavigation />
+      <div className="flex-1 min-w-0">
+        <ReactFlowProvider>
+          <CreateWorkflowContent />
+        </ReactFlowProvider>
+      </div>
+    </div>
   );
 }
 

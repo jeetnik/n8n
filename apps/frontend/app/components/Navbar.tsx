@@ -39,7 +39,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export default function Navbar() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-18 bg-black/80 backdrop-blur-md border-b border-white/10">
+    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-18 bg-black/80 backdrop-blur-md border-b border-white/20">
       <div className="flex items-center gap-8">
         <Link href="/" className="flex items-center gap-2">
           <img src="/n8n-color.svg" alt="n8n logo" width={50} height={18} className="object-contain invert brightness-0" />

@@ -98,7 +98,7 @@ export function ActionNode({ data, id }: { data: any; id: string }) {
   };
 
   return (
-    <div className={` rounded-l-4xl ${actionColor} relative `}>
+    <div className={` rounded-l-4xl ${actionColor} relative cursor-grab active:cursor-grabbing`}>
       {/* settings icon  */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>

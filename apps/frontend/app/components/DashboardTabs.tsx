@@ -142,7 +142,7 @@ export const DashboardTabs = () => {
   };
 
   return (
-    <div className="flex w-full bg-black">
+    <div className="flex w-full">
       <Tabs
         className="flex flex-row w-full"
         value={currentTab}
@@ -150,7 +150,7 @@ export const DashboardTabs = () => {
         orientation="vertical"
       >
         {/* Vertical Sidebar */}
-        <div className="w-56 min-h-[calc(100vh-60px)] border-r border-white/10 bg-black p-4 flex flex-col">
+        <div className="w-56 min-h-[calc(100vh-60px)] border-r border-white/20 bg-black p-4 flex flex-col">
           {/* Action Buttons */}
           <div className="flex flex-col gap-2 mb-4">
             <Link href="/create">

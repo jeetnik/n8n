@@ -7,8 +7,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-  DialogTrigger,
-  Dialog,
 } from "@/app/components/ui/dialog";
 import { Button } from "@/app/components/ui/button";
 import { BACKEND_URL } from "@/app/config/api";
@@ -19,10 +17,13 @@ import {
   SelectContent,
   SelectItem,
 } from "@/app/components/ui/select";
+import { Input } from "@/app/components/ui/input";
+import { Label } from "@/app/components/ui/label";
 import type { CredentialsI, CredentialSubmitPayload } from "@nen/db";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ArrowLeft, Check, ExternalLink } from "lucide-react";
 
 type CredentialDialogContentProps = {
   credApis: CredentialsI[];
@@ -41,8 +42,8 @@ export function CredentialDialogContent({
   setCredCurrApi,
   onSuccess,
 }: CredentialDialogContentProps) {
+  const [step, setStep] = useState<1 | 2>(1);
   const [formValues, setFormValues] = useState<Record<string, string>>({});
-  const [isInnerDialogOpen, setIsInnerDialogOpen] = useState(false);
 
   useEffect(() => {
     if (currCredApi) {
@@ -72,187 +73,189 @@ export function CredentialDialogContent({
       data: formValues,
     };
 
-    console.log("Submitting payload:", payload);
-
     try {
       const res = await axios.post(
         `${BACKEND_URL}/api/v1/cred/`,
         payload,
         { withCredentials: true }
       );
-      console.log("saved", res.data);
       if (res) {
         toast.success("Credentials created successfully");
-        setIsInnerDialogOpen(false);
         if (onSuccess) onSuccess();
       }
     } catch (error) {
       console.error("Error saving credential:", error);
+      toast.error("Failed to save credential");
     }
   };
 
+  const handleContinue = () => {
+    if (credName && currCredApi) {
+      setStep(2);
+    } else {
+      toast.error("Please select a credential type");
+    }
+  };
+
+  const handleBack = () => {
+    setStep(1);
+  };
+
   return (
-    <DialogContent className="w-[40%]">
-      <DialogHeader>
-        <DialogTitle>Add new Credentials</DialogTitle>
-        <DialogDescription>
-          <Select
-            onValueChange={(value) => {
-              const selected = credApis.find((c) => c.name === value);
-              if (selected) {
-                setCredName(value);
-                setCredCurrApi(selected);
-                setFormValues({});
-              }
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select Credentials" />
-            </SelectTrigger>
-            <SelectContent>
-              {credApis.map((cred) => (
-                <SelectItem key={cred.name} value={cred.name}>
-                  {cred.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <DialogContent className="sm:max-w-[550px] bg-[#141414] border-white/10 text-white p-0 gap-0 overflow-hidden">
+      {/* Header */}
+      <DialogHeader className="p-6 border-b border-white/10">
+        <div className="flex items-center gap-2">
+          {step === 2 && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleBack}
+              className="h-8 w-8 -ml-2 mr-1 hover:bg-white/10 text-gray-400 hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
+          <DialogTitle className="text-xl font-semibold">
+            {step === 1 ? "Add new Credentials" : currCredApi?.displayName}
+          </DialogTitle>
+        </div>
+        <DialogDescription className="text-gray-400">
+          {step === 1
+            ? "Select the service you want to connect to."
+            : `Configure your ${currCredApi?.name} connection.`
+          }
         </DialogDescription>
       </DialogHeader>
-      <DialogFooter>
-        <DialogClose asChild>
-          <Button variant="outline">Cancel</Button>
-        </DialogClose>
 
-        <Dialog open={isInnerDialogOpen} onOpenChange={setIsInnerDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              className="cursor-pointer bg-teal-500 "
-              type="button"
-              onClick={() => {
-                const res = credApis.filter(
-                  (credApi) => credApi.name === credName
-                );
-                if (res[0]) {
-                  setCredCurrApi(res[0]);
-                }
-              }}
-            >
+      <div className="p-6">
+        {step === 1 && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-gray-300">Credential Type</Label>
+              <Select
+                value={credName}
+                onValueChange={(value) => {
+                  const selected = credApis.find((c) => c.name === value);
+                  if (selected) {
+                    setCredName(value);
+                    setCredCurrApi(selected);
+                    setFormValues({});
+                  }
+                }}
+              >
+                <SelectTrigger className="w-full bg-[#1A1A1A] border-white/10 text-white focus:ring-teal-500/50 h-10">
+                  <SelectValue placeholder="Select service..." />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A1A] border-white/10 text-white">
+                  {credApis.map((cred) => (
+                    <SelectItem key={cred.name} value={cred.name} className="focus:bg-white/10 focus:text-white cursor-pointer">
+                      <div className="flex items-center gap-2">
+                        {cred.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
+
+        {step === 2 && currCredApi && (
+          <div className="space-y-6">
+            {/* Documentation Widget */}
+            {currCredApi.documentationUrl && (
+              <div className="bg-teal-950/20 border border-teal-900/50 rounded-lg p-3 flex items-start gap-3">
+                <div className="bg-teal-500/10 p-1.5 rounded-md mt-0.5">
+                  <ExternalLink className="h-4 w-4 text-teal-400" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-medium text-teal-200">Need help?</h4>
+                  <p className="text-xs text-teal-400/80 mt-1">
+                    Check the <a href={currCredApi.documentationUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-teal-300">official documentation</a> for detailed instructions.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Google OAuth Special Case */}
+            {currCredApi.name === "gmailOAuth2" && (
+              <Button
+                className="w-full bg-white text-black hover:bg-gray-200"
+                onClick={() => {
+                  window.location.href = `${BACKEND_URL}/api/v1/auth/google`;
+                }}
+              >
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5 mr-2" alt="Google" />
+                Sign in with Google
+              </Button>
+            )}
+
+            {/* Form Fields */}
+            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+              {currCredApi.properties.map((prop) => (
+                <div key={prop.name} className="space-y-2">
+                  <Label htmlFor={prop.name} className="text-sm font-medium text-gray-300">
+                    {prop.displayName}
+                    {prop.required !== false && <span className="text-red-500 ml-1">*</span>}
+                  </Label>
+
+                  {prop.type === "options" ? (
+                    <Select
+                      value={formValues[prop.name] || prop.default || ""}
+                      onValueChange={(val) => handleChange(prop.name, val)}
+                    >
+                      <SelectTrigger className="w-full bg-[#1A1A1A] border-white/10 text-white focus:ring-teal-500/50">
+                        <SelectValue placeholder={`Select ${prop.displayName}`} />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#1A1A1A] border-white/10 text-white">
+                        {prop.options?.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value} className="focus:bg-white/10 focus:text-white">
+                            {opt.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      id={prop.name}
+                      type={prop.name.toLowerCase().includes("password") || prop.name.toLowerCase().includes("key") ? "password" : "text"}
+                      placeholder={prop.placeholder}
+                      value={formValues[prop.name] || ""}
+                      onChange={(e) => handleChange(prop.name, e.target.value)}
+                      className="bg-[#1A1A1A] border-white/10 text-white placeholder:text-gray-600 focus:border-teal-500/50 focus:ring-teal-500/20"
+                    />
+                  )}
+
+                  {prop.description && (
+                    <p className="text-xs text-gray-500">{prop.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <DialogFooter className="p-6 pt-2 border-t border-white/10 gap-2">
+        {step === 1 ? (
+          <>
+            <DialogClose asChild>
+              <Button variant="outline" className="border-white/10 text-white hover:bg-white/5 bg-transparent">Cancel</Button>
+            </DialogClose>
+            <Button onClick={handleContinue} className="bg-teal-600 hover:bg-teal-700 text-white">
               Continue
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <div className="flex flex-col">
-              <div className="flex justify-between border-b">
-                <div className="flex gap-2 my-3">
-                  <div>
-                    <img src={currCredApi?.iconUrl} alt="" width={30} />
-                  </div>
-                  <div>
-                    <DialogTitle>{currCredApi?.displayName}</DialogTitle>
-                    <DialogDescription className="">
-                      {currCredApi?.name}
-                    </DialogDescription>
-                  </div>
-                </div>
-
-                <div>
-                  <DialogClose asChild>
-                    <Button className="mr-10 bg-teal-500" onClick={handleSave}>
-                      Save
-                    </Button>
-                  </DialogClose>
-                </div>
-              </div>
-
-              <div className="w-full flex">
-                <div className="w-[20%] py-2 text-xs flex flex-col items-center">
-                  <div className="bg-neutral-200 rounded-sm px-2 py-2">
-                    Connections
-                  </div>
-                </div>
-                <div className="w-[80%] py-2 ml-1 flex flex-col justify-between items-center text-xs">
-                  <div className="bg-teal-100 py-2 px-2 w-full border-l-4 rounded-sm">
-                    <div>
-                      Need help... See{" "}
-                      <a
-                        className="text-teal-600 font-bold"
-                        target="_blank"
-                        href={currCredApi?.documentationUrl}
-                      >
-                        Docs
-                      </a>
-                    </div>
-                  </div>
-                  {currCredApi?.name === "gmailOAuth2" && (
-                    <div className="my-2">
-                      <Button
-                        onClick={() => {
-                          window.location.href =
-                            `${BACKEND_URL}/api/v1/auth/google`;
-                        }}
-                      >
-                        Sign in with Google
-                      </Button>
-                    </div>
-                  )}
-                  {currCredApi?.name === "resendApi" && (
-                    <div className="my-2 p-3 bg-blue-50 border border-blue-200 rounded-md text-sm">
-                      <div className="font-semibold text-blue-900 mb-2">Quick Setup Guide:</div>
-                      <ol className="list-decimal ml-4 space-y-1 text-blue-800">
-                        <li>Sign up at <a href="https://resend.com" target="_blank" className="text-blue-600 underline">resend.com</a></li>
-                        <li>Verify your domain in the Resend dashboard</li>
-                        <li>Generate an API key from <a href="https://resend.com/api-keys" target="_blank" className="text-blue-600 underline">API Keys</a></li>
-                        <li>Paste your API key below</li>
-                      </ol>
-                      <div className="mt-2 text-xs text-blue-700">
-                        Tip: Use a verified domain for the &quot;From&quot; address when sending emails
-                      </div>
-                    </div>
-                  )}
-                  <div className="py-2 px-2 w-full rounded-sm">{currCredApi?.properties.map((curr) => (
-                    <div key={curr.name} className="my-1">
-                      <div>{curr.displayName}</div>
-                      {curr.type === "string" ? (
-                        <input
-                          type="text"
-                          placeholder={curr?.placeholder}
-                          defaultValue={curr?.default}
-                          onChange={(e) =>
-                            handleChange(curr.name, e.target.value)
-                          }
-                          className="bg-neutral-100 px-4 py-1 my-1 w-full border rounded-xs border-neutral-200"
-                        />
-                      ) : curr.type === "options" ? (
-                        <select
-                          defaultValue={curr?.default}
-                          onChange={(e) =>
-                            handleChange(curr.name, e.target.value)
-                          }
-                          className="bg-neutral-100 px-4 py-1 w-full border rounded border-neutral-200"
-                        >
-                          {curr.options?.map((opt) => (
-                            <option
-                              className="bg-neutral-50 py-2"
-                              key={opt.value}
-                              value={opt.value}
-                              title={opt.description}
-                            >
-                              {opt.name}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <div></div>
-                      )}
-                    </div>
-                  ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+          </>
+        ) : (
+          <>
+            <Button variant="outline" onClick={handleBack} className="border-white/10 text-white hover:bg-white/5 bg-transparent">Back</Button>
+            <Button onClick={handleSave} className="bg-teal-600 hover:bg-teal-700 text-white">
+              <Check className="w-4 h-4 mr-2" />
+              Save Credentials
+            </Button>
+          </>
+        )}
       </DialogFooter>
     </DialogContent>
   );

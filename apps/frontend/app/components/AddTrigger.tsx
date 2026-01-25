@@ -56,7 +56,7 @@ export function AddTrigger() {
   };
 
   return (
-    <div className="bg-orange-50 border border-dashed py-4 border-orange-400 rounded-lg shadow-md flex flex-col items-center justify-center gap-2 w-20">
+    <div className="bg-orange-50 border border-dashed py-4 border-orange-400 rounded-lg shadow-md flex flex-col items-center justify-center gap-2 w-20 cursor-grab active:cursor-grabbing">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <button className="cursor-pointer w-[60px] px-2 py-1 text-[10px] rounded-sm bg-orange-600 hover:bg-orange-700 text-white transition-all duration-200 shadow">

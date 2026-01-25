@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
 import { useEffect, useState } from "react";
-import type { UserCredentials, Workflow, INode, CredentialsI } from "@nen/db";
+import type { UserCredentials, Workflow, INode, CredentialsI } from "@/types/db";
 import axios from "axios";
 import { toast } from "sonner";
 import { BACKEND_URL } from "@/app/config/api";

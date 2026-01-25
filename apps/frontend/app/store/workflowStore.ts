@@ -14,7 +14,7 @@ import {
   type OnEdgesChange,
   type OnConnect,
 } from "@xyflow/react";
-import type { UserCredentials } from "@nen/db";
+import type { UserCredentials } from "@/types/db";
 import axios from "axios";
 import { BACKEND_URL, WS_URL } from "../config/api";
 

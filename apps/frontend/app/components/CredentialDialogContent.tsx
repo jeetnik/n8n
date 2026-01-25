@@ -19,7 +19,7 @@ import {
 } from "@/app/components/ui/select";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
-import type { CredentialsI, CredentialSubmitPayload } from "@nen/db";
+import type { CredentialsI, CredentialSubmitPayload } from "@/types/db";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

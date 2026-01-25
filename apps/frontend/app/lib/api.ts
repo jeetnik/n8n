@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BACKEND_URL } from '@/app/config/api';
-import type { CredentialSubmitPayload, Workflow } from '@nen/db';
+import type { CredentialSubmitPayload, Workflow } from '@/types/db';
 
 const api = axios.create({
   baseURL: BACKEND_URL,
